@@ -17,6 +17,7 @@
 #include "log/log.hpp"
 
 #include <stdint.h>
+#include <set>
 
 #include <mesos/log/log.hpp>
 
@@ -34,7 +35,6 @@
 #include <stout/foreach.hpp>
 #include <stout/lambda.hpp>
 #include <stout/nothing.hpp>
-#include <stout/set.hpp>
 
 #include "log/coordinator.hpp"
 #include "log/network.hpp"
@@ -94,7 +94,7 @@ LogProcess::LogProcess(
         timeout,
         znode,
         auth,
-        Set<UPID>((UPID) replica->pid()))),
+        std::set<UPID>{(UPID) replica->pid()})),
     autoInitialize(_autoInitialize),
     group(new zookeeper::Group(servers, timeout, znode, auth)),
     metrics(*this, metricsPrefix) {}

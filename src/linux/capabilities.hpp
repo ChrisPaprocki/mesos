@@ -19,11 +19,11 @@
 
 #include <string>
 #include <vector>
+#include <set>
 
 #include <stout/flags.hpp>
 #include <stout/nothing.hpp>
 #include <stout/protobuf.hpp>
-#include <stout/set.hpp>
 #include <stout/try.hpp>
 
 #include <mesos/mesos.hpp>
@@ -93,8 +93,8 @@ enum Type
 class ProcessCapabilities
 {
 public:
-  Set<Capability> get(const Type& type) const;
-  void set(const Type& type, const Set<Capability>& capabilities);
+  std::set<Capability> get(const Type& type) const;
+  void set(const Type& type, const std::set<Capability>& capabilities);
 
 private:
   friend class Capabilities;
@@ -106,10 +106,10 @@ private:
   // Disallow default constructor.
   ProcessCapabilities() {}
 
-  Set<Capability> effective;
-  Set<Capability> permitted;
-  Set<Capability> inheritable;
-  Set<Capability> bounding;
+  std::set<Capability> effective;
+  std::set<Capability> permitted;
+  std::set<Capability> inheritable;
+  std::set<Capability> bounding;
 };
 
 
@@ -168,7 +168,7 @@ public:
    *
    * @return the set of supported capabilities.
    */
-  Set<Capability> getAllSupportedCapabilities();
+  std::set<Capability> getAllSupportedCapabilities();
 
 private:
   explicit Capabilities(int _lastCap) : lastCap(_lastCap) {}
@@ -179,7 +179,7 @@ private:
 
 
 Capability convert(const CapabilityInfo::Capability& capabilityInfo);
-CapabilityInfo convert(const Set<Capability>& capabilitySet);
+CapabilityInfo convert(const std::set<Capability>& capabilitySet);
 
 
 std::ostream& operator<<(
@@ -194,7 +194,7 @@ std::ostream& operator<<(
 
 std::ostream& operator<<(
     std::ostream& stream,
-    const Set<Capability>& capabilities);
+    const std::set<Capability>& capabilities);
 
 
 std::ostream& operator<<(

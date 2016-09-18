@@ -20,7 +20,6 @@
 
 #include <sys/prctl.h>
 
-#include <set>
 #include <string>
 
 #include <stout/numify.hpp>
@@ -104,7 +103,7 @@ struct SyscallPayload
 
 
 // Helper funciton to convert capability set to bitset.
-static uint64_t toCapabilityBitset(const Set<Capability>& capabilities)
+static uint64_t toCapabilityBitset(const set<Capability>& capabilities)
 {
   uint64_t result = 0;
 
@@ -118,10 +117,10 @@ static uint64_t toCapabilityBitset(const Set<Capability>& capabilities)
 }
 
 
-// Helper function to convert capability bitset to Set.
-static Set<Capability> toCapabilitySet(uint64_t bitset)
+// Helper function to convert capability bitset to set.
+static set<Capability> toCapabilitySet(uint64_t bitset)
 {
-  Set<Capability> result;
+  std::set<Capability> result;
 
   for (int i = 0; i < MAX_CAPABILITY; i++) {
     if ((bitset & (1ULL << i)) != 0) {
@@ -133,7 +132,7 @@ static Set<Capability> toCapabilitySet(uint64_t bitset)
 }
 
 
-Set<Capability> ProcessCapabilities::get(const Type& type) const
+set<Capability> ProcessCapabilities::get(const Type& type) const
 {
   switch (type) {
     case EFFECTIVE:   return effective;
@@ -148,7 +147,7 @@ Set<Capability> ProcessCapabilities::get(const Type& type) const
 
 void ProcessCapabilities::set(
     const Type& type,
-    const Set<Capability>& capabilities)
+    const std::set<Capability>& capabilities)
 {
   switch (type) {
     case EFFECTIVE:   effective = capabilities;
@@ -279,9 +278,9 @@ Try<Nothing> Capabilities::keepCapabilitiesOnSetUid()
 }
 
 
-Set<Capability> Capabilities::getAllSupportedCapabilities()
+std::set<Capability> Capabilities::getAllSupportedCapabilities()
 {
-  Set<Capability> result;
+  std::set<Capability> result;
 
   for (int i = 0; i <= lastCap; i++) {
     result.insert(Capability(i));
@@ -302,7 +301,7 @@ Capability convert(const CapabilityInfo::Capability& capability)
 }
 
 
-CapabilityInfo convert(const Set<Capability>& capabilities)
+CapabilityInfo convert(const std::set<Capability>& capabilities)
 {
   CapabilityInfo capabilityInfo;
 
@@ -376,7 +375,7 @@ ostream& operator<<(ostream& stream, const Type& type)
 }
 
 
-ostream& operator<<(ostream& stream, const Set<Capability>& capabilities)
+ostream& operator<<(ostream& stream, const std::set<Capability>& capabilities)
 {
   return stream << stringify(capabilities);
 }
