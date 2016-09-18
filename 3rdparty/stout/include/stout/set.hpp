@@ -17,38 +17,42 @@
 #include <set>
 #include <vector>
 
-template <typename T>
-class Set : public std::set<T>
+
+// TODO(bmahler): Move this into stout/set.hpp (for an unknown
+// reason, g++ was not able to lookup the `-` operator even
+// though it was able to find the `&`, `|` operators also
+// defined in stout/set.hpp).
+/*template <typename T>
+std::set<T> operator - (const std::set<T>& left, const std::set<T>& right)
 {
-public:
-  Set() {}
+  std::set<T> result;
+  std::set_difference(
+      left.begin(),
+      left.end(),
+      right.begin(),
+      right.end(),
+      std::inserter(result, result.begin()));
+  return result;
+}*/
 
-  Set(const T& t1)
-  {
-    std::set<T>::insert(t1);
-  }
 
-  Set(const T& t1, const T& t2)
-  {
-    std::set<T>::insert(t1);
-    std::set<T>::insert(t2);
-  }
+/*template <typename T>
+std::set<T> operator-(const std::set<T>& left, const T& t)
+{
+  std::set<T> result = left;
+  return result;
+}*/
 
-  Set(const T& t1, const T& t2, const T& t3)
-  {
-    std::set<T>::insert(t1);
-    std::set<T>::insert(t2);
-    std::set<T>::insert(t3);
-  }
 
-  Set(const T& t1, const T& t2, const T& t3, const T& t4)
-  {
-    std::set<T>::insert(t1);
-    std::set<T>::insert(t2);
-    std::set<T>::insert(t3);
-    std::set<T>::insert(t4);
-  }
-};
+template <typename T>
+std::set<T> operator-(const std::set<T>& left, const std::set<T>& right)
+{
+  // Note, we're not using 'set_union' since it affords us no benefit
+  // in efficiency and is more complicated to use given we have sets.
+  std::set<T> result = left;
+  result.insert(right.begin(), right.end());
+  return result;
+}
 
 
 template <typename T>
